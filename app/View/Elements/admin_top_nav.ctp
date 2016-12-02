@@ -27,8 +27,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Orders <span class="caret"></span></a>
 					<ul class="dropdown-menu">						
-						<li><a href="#"><span class="glyphicon glyphicon-list"></span> Orders List</a></li>
-						<li><a href="#"><span class="glyphicon glyphicon-plus"></span> New Order</a></li>
+						<li><a href="/orders/admin_list"><span class="glyphicon glyphicon-list"></span> Orders List</a></li>
 						<li role="separator" class="divider"></li>
 						<li><a href="/delivery_locations/admin_list"><span class="glyphicon glyphicon-list"></span> Delivery Locations List</a></li>
 					</ul>

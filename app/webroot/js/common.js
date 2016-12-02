@@ -1,3 +1,5 @@
+var orderDetails = {};
+
 function isEmail(email) {
 	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 	return regex.test(email);
@@ -542,28 +544,38 @@ function submitOrderUserForm()
 		$('#orderUserForm #UserMobile').focus();		
 	}
 	
-	if(error == false) {		
-		var orderUserDetailsRequest = $.ajax({
-			url: "/orders/saveUserDetails",
-			method: "POST",
-			data: { 'Order[name]' : userName, 'Order[email]' : userEmail, 'Order[mobile]' : userMobile },
-			dataType: "json"
-		});	 
-		orderUserDetailsRequest.done(function( data ) {
+	if(error == false) {
+		orderDetails.name = userName;
+		orderDetails.email = userEmail;
+		orderDetails.mobile = userMobile;
+		
+		$('#userDetailsDiv').hide();
+		$('#userPaymentDiv').hide();
+		$('#userAddressDiv').show();
+		console.log(orderDetails);
+		
+	
+		// var orderUserDetailsRequest = $.ajax({
+			// url: "/orders/saveUserDetails",
+			// method: "POST",
+			// data: { 'Order[name]' : userName, 'Order[email]' : userEmail, 'Order[mobile]' : userMobile },
+			// dataType: "json"
+		// });	 
+		// orderUserDetailsRequest.done(function( data ) {
 			
-			if( data.response.status == 'error' ) {
-				$('#orderUserErrorDiv').addClass('alert-danger');	
-				$('#orderUserErrorDiv').show();
-				$('#orderUserErrorDiv').html(data.response.message);
-			} else {				
-				window.location.href = '/orders/confirmAddress';
-			}
-		});	 
-		orderUserDetailsRequest.fail(function( jqXHR, textStatus ) {
-			$('#orderUserErrorDiv').html( "Request failed: " + textStatus );
-			$('#orderUserErrorDiv').addClass('alert-danger');
-			$('#orderUserErrorDiv').show();
-		});
+			// if( data.response.status == 'error' ) {
+				// $('#orderUserErrorDiv').addClass('alert-danger');	
+				// $('#orderUserErrorDiv').show();
+				// $('#orderUserErrorDiv').html(data.response.message);
+			// } else {				
+				// window.location.href = '/orders/confirmAddress';
+			// }
+		// });	 
+		// orderUserDetailsRequest.fail(function( jqXHR, textStatus ) {
+			// $('#orderUserErrorDiv').html( "Request failed: " + textStatus );
+			// $('#orderUserErrorDiv').addClass('alert-danger');
+			// $('#orderUserErrorDiv').show();
+		// });
 	} else {
 		$('#orderUserErrorDiv').addClass('alert-danger');
 		$('#orderUserErrorDiv').show();
@@ -599,28 +611,37 @@ function submitOrderAddressForm()
 		$('#orderAddressForm #UserLocation').focus();
 	}
 	
-	if(error == false) {		
-		var orderAddressRequest = $.ajax({
-			url: "/orders/saveAddress",
-			method: "POST",
-			data: { 'Order[address]' : userAddress, 'Order[delivery_location_id]' : userLocationId },
-			dataType: "json"
-		});	 
-		orderAddressRequest.done(function( data ) {
+	if(error == false) {
+		orderDetails.address = userAddress;
+		orderDetails.delivery_location_id = userLocationId;
+		
+		$('#userDetailsDiv').hide();
+		$('#userAddressDiv').hide();
+		$('#userPaymentDiv').show();
+		console.log(orderDetails);
+
+	
+		// var orderAddressRequest = $.ajax({
+			// url: "/orders/saveAddress",
+			// method: "POST",
+			// data: { 'Order[address]' : userAddress, 'Order[delivery_location_id]' : userLocationId },
+			// dataType: "json"
+		// });	 
+		// orderAddressRequest.done(function( data ) {
 			
-			if( data.response.status == 'error' ) {
-				$('#orderUserErrorDiv').addClass('alert-danger');	
-				$('#orderUserErrorDiv').show();
-				$('#orderUserErrorDiv').html(data.response.message);
-			} else {				
-				window.location.href = '/orders/confirmPaymentMethod';
-			}
-		});	 
-		orderAddressRequest.fail(function( jqXHR, textStatus ) {
-			$('#orderUserErrorDiv').html( "Request failed: " + textStatus );
-			$('#orderUserErrorDiv').addClass('alert-danger');
-			$('#orderUserErrorDiv').show();
-		});
+			// if( data.response.status == 'error' ) {
+				// $('#orderUserErrorDiv').addClass('alert-danger');	
+				// $('#orderUserErrorDiv').show();
+				// $('#orderUserErrorDiv').html(data.response.message);
+			// } else {				
+				// window.location.href = '/orders/confirmPaymentMethod';
+			// }
+		// });	 
+		// orderAddressRequest.fail(function( jqXHR, textStatus ) {
+			// $('#orderUserErrorDiv').html( "Request failed: " + textStatus );
+			// $('#orderUserErrorDiv').addClass('alert-danger');
+			// $('#orderUserErrorDiv').show();
+		// });
 	} else {
 		$('#orderUserErrorDiv').addClass('alert-danger');
 		$('#orderUserErrorDiv').show();
@@ -646,74 +667,47 @@ function submitOrderPaymentMethodForm()
 		$('#orderPaymentMethodForm #UserPaymentMethod').focus();
 	}
 	
-	if(error == false) {		
-		var orderPaymentMethodRequest = $.ajax({
-			url: "/orders/savePaymentDetails",
-			method: "POST",
-			data: { 'Order[payment_method]' : userPaymentMethod, 'Order[message]' : userMessage },
-			dataType: "json"
-		});	 
-		orderPaymentMethodRequest.done(function( data ) {
+	if(error == false) {
+		orderDetails.payment_method = userPaymentMethod;
+		orderDetails.message = userMessage;		
+		console.log(orderDetails);
+		
+		$('#saveOrderDetailsForm #OrderName').attr('value', orderDetails.name);
+		$('#saveOrderDetailsForm #OrderEmail').attr('value', orderDetails.email);
+		$('#saveOrderDetailsForm #OrderMobile').attr('value', orderDetails.mobile);
+		$('#saveOrderDetailsForm #OrderDeliveryLocationId').attr('value', orderDetails.delivery_location_id);
+		$('#saveOrderDetailsForm #OrderAddress').attr('value', orderDetails.address);
+		$('#saveOrderDetailsForm #OrderPaymentMethod').attr('value', orderDetails.payment_method);
+		$('#saveOrderDetailsForm #OrderMessage').attr('value', orderDetails.message);
+		$('#saveOrderDetailsForm').submit();
+		showAlertPopup('processing');
+		
+		// $('#userDetailsDiv').hide();
+		// $('#userAddressDiv').hide();
+		// $('#userPaymentDiv').show();
+		
+	
+		// var orderPaymentMethodRequest = $.ajax({
+			// url: "/orders/savePaymentDetails",
+			// method: "POST",
+			// data: { 'Order[payment_method]' : userPaymentMethod, 'Order[message]' : userMessage },
+			// dataType: "json"
+		// });	 
+		// orderPaymentMethodRequest.done(function( data ) {
 			
-			if( data.response.status == 'error' ) {
-				$('#orderUserErrorDiv').addClass('alert-danger');	
-				$('#orderUserErrorDiv').show();
-				$('#orderUserErrorDiv').html(data.response.message);
-			} else {
-				window.location.href = '/orders/bookOrder';
-			}
-		});	 
-		orderPaymentMethodRequest.fail(function( jqXHR, textStatus ) {
-			$('#orderUserErrorDiv').html( "Request failed: " + textStatus );
-			$('#orderUserErrorDiv').addClass('alert-danger');
-			$('#orderUserErrorDiv').show();
-		});
-	} else {
-		$('#orderUserErrorDiv').addClass('alert-danger');
-		$('#orderUserErrorDiv').show();
-	}
-}
-
-function verifyOTP()
-{
-	var userOTP = $('#orderConfirmForm #UserOTP').val().trim();
-	
-	// hide error/success message
-	$('#orderUserErrorDiv').hide();
-	$('#orderUserErrorDiv').removeClass('alert-danger');
-	$('#orderUserErrorDiv').removeClass('alert-success');
-	
-	// form validation
-	var error = false;
-	
-	if(userOTP.length < 1) {
-		var error = true;
-		$('#orderUserErrorDiv').html('Error! OTP field cannot be empty.');
-		$('#orderAddressForm #UserOTP').focus();
-	}
-	
-	if(error == false) {		
-		var orderVerifyOTPRequest = $.ajax({
-			url: "/orders/verifyotp",
-			method: "POST",
-			data: { 'otp' : userOTP },
-			dataType: "json"
-		});	 
-		orderVerifyOTPRequest.done(function( data ) {
-			
-			if( data.response.status == 'error' ) {
-				$('#orderUserErrorDiv').addClass('alert-danger');	
-				$('#orderUserErrorDiv').show();
-				$('#orderUserErrorDiv').html(data.response.message);
-			} else {				
-				window.location.href = '/orders/confirmOrder';
-			}
-		});	 
-		orderVerifyOTPRequest.fail(function( jqXHR, textStatus ) {
-			$('#orderUserErrorDiv').html( "Request failed: " + textStatus );
-			$('#orderUserErrorDiv').addClass('alert-danger');
-			$('#orderUserErrorDiv').show();
-		});
+			// if( data.response.status == 'error' ) {
+				// $('#orderUserErrorDiv').addClass('alert-danger');	
+				// $('#orderUserErrorDiv').show();
+				// $('#orderUserErrorDiv').html(data.response.message);
+			// } else {
+				// window.location.href = '/orders/bookOrder';
+			// }
+		// });	 
+		// orderPaymentMethodRequest.fail(function( jqXHR, textStatus ) {
+			// $('#orderUserErrorDiv').html( "Request failed: " + textStatus );
+			// $('#orderUserErrorDiv').addClass('alert-danger');
+			// $('#orderUserErrorDiv').show();
+		// });
 	} else {
 		$('#orderUserErrorDiv').addClass('alert-danger');
 		$('#orderUserErrorDiv').show();
